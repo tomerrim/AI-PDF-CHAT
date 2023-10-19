@@ -1,3 +1,4 @@
+import { MAX_RESPONSE_TOKENS, trimMessages } from "@/lib/tokens";
 import { createOrReadVectorStoreIndex } from "@/lib/vector-store";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { MetadataMode } from "llamaindex";
@@ -35,7 +36,8 @@ export async function POST(req: Request) {
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         temperature: 0,
-        messages: [systemMessage, ...messages],
+        max_tokens: MAX_RESPONSE_TOKENS,
+        messages: trimMessages([systemMessage, ...messages]),
         stream: true,
     });
 
